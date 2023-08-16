@@ -24,7 +24,7 @@ pipeline {
     }
     stage('Build and Push Docker Image') {
       environment {
-        DOCKER_IMAGE = "chaitannyaa/java_awesome-cicd:${BUILD_NUMBER}"
+        DOCKER_IMAGE = "vampzz/ubuntu:latest:${BUILD_NUMBER}"
         REGISTRY_CREDENTIALS = credentials('Juventus.123a')
       }
       steps {
@@ -32,7 +32,7 @@ pipeline {
             sh 'docker build -t ${DOCKER_IMAGE} .'
             def dockerImage = docker.image("${DOCKER_IMAGE}")
             docker.withRegistry('https://index.docker.io/v1/', "dockerHub") {
-                dockerImage.push()
+                dockerImage.pull()
             }
         }
       }
