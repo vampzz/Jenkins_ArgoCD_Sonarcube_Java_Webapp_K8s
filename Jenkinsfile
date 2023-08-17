@@ -24,19 +24,21 @@ pipeline {
     }
     stage('Build and Push Docker Image') {
       environment {
-        DOCKER_IMAGE = "vampzz/ubuntu:latest:${BUILD_NUMBER}"
-        REGISTRY_CREDENTIALS = credentials('Juventus.123a')
+        DOCKER_IMAGE = "chaitannyaa/java_awesome-cicd:${BUILD_NUMBER}"
+        REGISTRY_CREDENTIALS = credentials('dockerHub')
       }
       steps {
         script {
-            sh 'docker build -t ${DOCKER_IMAGE} .'
-            def dockerImage = docker.image("${DOCKER_IMAGE}")
-            docker.withRegistry('https://index.docker.io/v1/', "dockerHub") {
-                dockerImage.pull()
-            }
+          sh 'docker build -t ${DOCKER_IMAGE} .'
+          def dockerImage = docker.image("${DOCKER_IMAGE}")
+          docker.withRegistry('https://index.docker.io/v1/', "dockerHub") {
+            dockerImage.push()
+          }
         }
       }
     }
+  }
+}
     stage('Update Deployment File') {
         environment {
             GIT_REPO_NAME = "Jenkins_ArgoCD_Sonarcube_Java_Webapp_K8s"
